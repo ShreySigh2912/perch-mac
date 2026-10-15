@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perch releases · what's new in perch</title>
+<meta name="description" content="Every Perch update, newest first. Perch 0.5.0: ChatGPT joins the notch.">
+<meta property="og:title" content="What's new in Perch">
+<meta property="og:description" content="Perch 0.3.0: every claude.ai tab in your notch, with allow, deny and reply.">
+<meta property="og:image" content="https://agentperch.in/assets/og.png">
+<meta name="theme-color" content="#BFE8FA">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/app-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@400;500;600;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.page{width:960px;max-width:calc(100% - 48px);margin:0 auto;padding-bottom:120px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding:96px 0 48px}
+.head h1{font-family:var(--display);font-weight:800;font-size:76px;line-height:72px;letter-spacing:-.045em;margin-top:14px}
+.head .lede{width:330px;flex:none;font-size:17px;line-height:26px;padding-bottom:6px}
+
+.latest .body{display:flex;gap:56px;padding:48px 56px 52px}
+.rail{width:220px;flex:none;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.rail .ver{font-family:var(--display);font-weight:800;font-size:88px;line-height:80px;letter-spacing:-.05em}
+.rail .date{font-size:14px;line-height:20px;color:var(--graphite)}
+.notes{flex:1;display:flex;flex-direction:column;gap:26px}
+.notes h2{font-family:var(--display);font-weight:800;font-size:40px;line-height:42px;letter-spacing:-.03em}
+.notes ul{list-style:none;display:flex;flex-direction:column;gap:20px}
+.notes li{display:flex;gap:16px;align-items:flex-start}
+.notes li i{width:12px;height:12px;flex:none;border:2px solid var(--ink);margin-top:6px;background:var(--c)}
+.notes li b{display:block;font-size:17px;font-weight:600;line-height:24px}
+.notes li span{display:block;font-size:15px;line-height:22px;color:var(--graphite);margin-top:3px}
+.actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-top:10px}
+.actions small{font-size:14px;line-height:20px;color:var(--graphite)}
+
+.earlier{display:flex;flex-direction:column;gap:20px;padding-top:72px}
+.row{display:flex;gap:24px;align-items:flex-start}
+.old{flex:1;min-width:0}
+.old:nth-child(1){transform:rotate(-1deg)}
+.old:nth-child(2){transform:rotate(1.5deg)}
+.old .body{display:flex;flex-direction:column;gap:18px;padding:30px 32px 34px}
+.old .top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.old .ver{font-family:var(--display);font-weight:800;font-size:44px;line-height:44px;letter-spacing:-.04em}
+.old .date{font-size:14px;color:var(--graphite)}
+.old h3{font-family:var(--display);font-weight:800;font-size:24px;line-height:28px;letter-spacing:-.02em}
+.old ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:22px;color:var(--body)}
+.old li::before{content:"· "}
+
+@media (max-width:900px){
+  .page{max-width:calc(100% - 32px)}
+  .head{flex-direction:column;align-items:flex-start;gap:16px;padding:48px 0 32px}
+  .head h1{font-size:48px;line-height:46px}
+  .head .lede{width:auto}
+  .latest .body{flex-direction:column;gap:28px;padding:32px 22px 36px}
+  .rail{width:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:12px 16px}
+  .rail .ver{font-size:56px;line-height:52px}
+  .rail img{display:none}
+  .notes h2{font-size:30px;line-height:32px}
+  .row{flex-direction:column}
+  .old,.old:nth-child(1),.old:nth-child(2){transform:none;width:100%}
+  .old .body{padding:24px 22px 28px}
+}
+</style>
+</head>
+<body>
+<header class="menubar">
+  <nav class="menus" aria-label="Main">
+    <a class="app" href="./"><img class="px" src="assets/pet-idle.png" width="22" height="22" alt="">perch</a>
+    <a href="./#features" class="feat">features</a>
+    <a href="privacy.html">privacy</a>
+    <a href="releases.html" class="on" aria-current="page">releases</a>
+  </nav>
+  <div class="notch" aria-hidden="true">
+    <img class="px bob" src="assets/pet-speaking.png" width="32" height="32" alt="">
+    <div class="wave"><i style="--h:6px;--d:.1"></i><i style="--h:14px;--d:.5"></i><i style="--h:9px;--d:.3"></i><i style="--h:18px;--d:.8"></i><i style="--h:11px;--d:.2"></i><i style="--h:5px;--d:.6"></i></div>
+  </div>
+  <div class="status">
+    <span class="clock" id="clock"></span>
+    <a class="pill-btn" href="Perch.dmg" download>get perch</a>
+  </div>
+</header>
+
+<main class="page">
+  <div class="head">
+    <div>
+      <div class="eyebrow">releases</div>
+      <h1>what's new<br>in perch.</h1>
+    </div>
+    <p class="lede">every update, newest first. perch checks for new versions by itself and never installs anything without asking.</p>
+  </div>
+
+  <article class="window bold latest" id="v0.5.0" style="margin-bottom:40px">
+    <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.5.0 — release notes</span><span class="sp"></span></div>
+    <div class="body">
+      <div class="rail">
+        <span class="tag lime">LATEST</span>
+        <div class="ver">0.5.0</div>
+        <div class="date">15 october 2026</div>
+      </div>
+      <div class="notes">
+        <h2>chatgpt joins the notch.</h2>
+        <ul>
+          <li style="--c:var(--lime)"><i></i><div><b>chatgpt in the notch</b><span>the chatgpt app and chatgpt.com tabs show working and done, with reply. tabs come through the same perch for claude extension.</span></div></li>
+          <li style="--c:var(--violet)"><i></i><div><b>answer with codex</b><span>signed in to codex with chatgpt? pick it under voice → answer with, and your chatgpt plan answers your questions. free, no keys.</span></div></li>
+          <li style="--c:var(--sky)"><i></i><div><b>always up to date</b><span>opening perch re-checks your chats, and tabs in the background report the moment something changes.</span></div></li>
+          <li style="--c:var(--lemon)"><i></i><div><b>count yourself in</b><span>say yes once and perch sends a tiny anonymous check-in a day: a random id and the app version. nothing else.</span></div></li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="Perch.dmg" download>download perch for mac</a>
+          <small>already on perch? it'll offer the update.</small>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="window bold latest" id="v0.4.0" style="margin-bottom:40px">
+    <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.4.0 — release notes</span><span class="sp"></span></div>
+    <div class="body">
+      <div class="rail">
+        <div class="ver">0.4.0</div>
+        <div class="date">15 october 2026</div>
+      </div>
+      <div class="notes">
+        <h2>a better voice, a memory, and a helping hand.</h2>
+        <ul>
+          <li style="--c:var(--violet)"><i></i><div><b>a memory of its own</b><span>perch keeps short notes about you, your projects and how you like things, in a file on your mac you can open and edit.</span></div></li>
+          <li style="--c:var(--sky)"><i></i><div><b>knows your project notes</b><span>reads the same CLAUDE.md and AGENTS.md your agents use before it answers.</span></div></li>
+          <li style="--c:var(--magenta)"><i></i><div><b>a faster, nicer voice</b><span>perch starts talking at the first sentence instead of waiting for the whole answer. pick a natural sarvam or elevenlabs voice with your own key, or a free premium mac voice.</span></div></li>
+          <li style="--c:var(--lime)"><i></i><div><b>out of your way</b><span>drag perch anywhere along the top, and let it hide when nothing's happening. it tucks away as soon as it's done talking.</span></div></li>
+          <li style="--c:var(--lemon)"><i></i><div><b>does things on your mac</b><span>"open my invoices folder", "pause the music", "make a folder for the launch". perch shows exactly what it will do and waits for allow.</span></div></li>
+          <li style="--c:var(--hot)"><i></i><div><b>small fixes</b><span>copy and paste now work in perch's settings, and perch's buttons never squash.</span></div></li>
+        </ul>
+        <div class="actions">
+          <small>included in every download from 0.4.0 on.</small>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="window bold latest" id="v0.3.1" style="margin-bottom:40px">
+    <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.3.1 — release notes</span><span class="sp"></span></div>
+    <div class="body">
+      <div class="rail">
+        <div class="ver">0.3.1</div>
+        <div class="date">15 october 2026</div>
+      </div>
+      <div class="notes">
+        <h2>a new home, a calmer update check.</h2>
+        <ul>
+          <li style="--c:var(--sky)"><i></i><div><b>perch lives at agentperch.in</b><span>the website, downloads and update checks all moved here.</span></div></li>
+          <li style="--c:var(--lime)"><i></i><div><b>update checks that don't give up</b><span>if the website moves or has a hiccup, perch finds the update anyway.</span></div></li>
+          <li style="--c:var(--lemon)"><i></i><div><b>sharper on claude.ai</b><span>allow and deny buttons and "asking a question" are picked up more reliably.</span></div></li>
+        </ul>
+        <div class="actions">
+          <small>on 0.3.0? download the latest once; after that perch offers updates itself.</small>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="window bold latest" id="v0.3.0">
+    <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.3.0 — release notes</span><span class="sp"></span></div>
+    <div class="body">
+      <div class="rail">
+        <div class="ver">0.3.0</div>
+        <div class="date">15 october 2026</div>
+        <img class="px bob" src="assets/pet-idle.png" width="72" height="72" alt="">
+      </div>
+      <div class="notes">
+        <h2>claude.ai joins the notch.</h2>
+        <ul>
+          <li style="--c:var(--violet)"><i></i><div><b>every claude.ai tab in your notch</b><span>working, needs you or done, with allow, deny and reply. works in chrome, brave, edge and arc with the free perch for claude extension.</span></div></li>
+          <li style="--c:var(--lemon)"><i></i><div><b>knows when claude needs you</b><span>permission prompts and questions show up even from background tabs. look away, perch taps you.</span></div></li>
+          <li style="--c:var(--sky)"><i></i><div><b>fixes itself when claude changes</b><span>if claude moves a button, perch says so and picks up the fix from this site. no update needed.</span></div></li>
+          <li style="--c:var(--hot)"><i></i><div><b>crash reports, only if you say yes</b><span>helps us fix bugs fast. never your screen, chats or files.</span></div></li>
+          <li style="--c:var(--lime)"><i></i><div><b>send feedback</b><span>from the menu bar or about &amp; updates. it lands straight with the people building perch.</span></div></li>
+        </ul>
+        <div class="actions">
+          <small>included in every download from 0.3.0 on.</small>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="earlier" aria-label="Earlier releases">
+    <div class="eyebrow muted">earlier</div>
+    <div class="row">
+      <article class="window old" id="v0.2.0">
+        <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.2.0</span><span class="sp"></span></div>
+        <div class="body">
+          <div class="top"><span class="ver">0.2.0</span><span class="date">15 october 2026</span></div>
+          <h3>a home for perch.</h3>
+          <ul>
+            <li>a perch window: what's running now, and every setting in one place</li>
+            <li>allow, deny and reply to the claude app from the window</li>
+            <li>real logos for claude code, codex and the claude app. chatgpt coming soon</li>
+            <li>pick your hotkey, voice, speed and which screen perch lives on</li>
+            <li>today's numbers: tasks finished, approvals, questions answered</li>
+            <li>check for updates in about &amp; updates</li>
+          </ul>
+        </div>
+      </article>
+      <article class="window old" id="v0.1.0">
+        <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch 0.1.0</span><span class="sp"></span></div>
+        <div class="body">
+          <div class="top"><span class="ver">0.1.0</span><span class="date">15 october 2026</span></div>
+          <h3>hello, little bird.</h3>
+          <ul>
+            <li>a pixel bird in your notch whose face shows how your agents are doing</li>
+            <li>see claude code and codex working, waiting or done without switching apps</li>
+            <li>allow or deny their requests from the notch</li>
+            <li>hold ⌃⌥ and ask anything about your screen. it answers out loud and points</li>
+            <li>runs on your own claude code. no account, no server, free</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>perch is free and independent. not affiliated with anthropic or openai.</span>
+  <a href="privacy.html">privacy</a>
+  <a href="releases.html">releases</a>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
