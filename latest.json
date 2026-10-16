@@ -1,0 +1,7 @@
+{
+  "version": "0.5.2",
+  "url": "Perch.dmg",
+  "notes": [
+    "Background Claude app chats get their own row: working, then done, even while you look at another chat"
+  ]
+}
