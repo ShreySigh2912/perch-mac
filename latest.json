@@ -1,0 +1,9 @@
+{
+  "version": "0.6.0",
+  "url": "Perch.dmg",
+  "notes": [
+    "Ask Perch to make things: a small website, a doc, research. It shows the plan, you say yes, it builds it in ~/Perch",
+    "Hover the bird to see each agent's steps live, with times",
+    "WhatsApp to-dos: asks that mention you land in a new To-do tab (off until you turn it on in Skills)"
+  ]
+}

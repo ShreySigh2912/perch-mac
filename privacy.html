@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perch privacy · your stuff stays on your mac</title>
+<meta name="description" content="What Perch and the Perch for Claude extension do with your data: everything stays on your Mac. Crash reports only if you say yes.">
+<meta property="og:title" content="Perch privacy · your stuff stays on your mac">
+<meta property="og:description" content="No account, no server, no api key. Your screen, chats and files never leave your Mac.">
+<meta property="og:image" content="https://agentperch.in/assets/og.png">
+<meta name="theme-color" content="#BFE8FA">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/app-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@400;500;600;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.desk{display:flex;justify-content:center;align-items:flex-start;gap:48px;padding:88px 24px 120px;max-width:1440px;margin:0 auto}
+.doc-win{width:760px;max-width:100%;flex:none}
+.doc{display:flex;flex-direction:column;gap:36px;padding:56px 64px 64px}
+.head{display:flex;flex-direction:column;gap:14px}
+.head h1{font-family:var(--display);font-weight:800;font-size:64px;line-height:62px;letter-spacing:-.035em}
+.head .lede{max-width:560px}
+.sec{display:flex;gap:32px;padding-top:28px;border-top:1px solid var(--rule)}
+.sec .label{width:168px;flex:none;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.sec h2{font-family:var(--display);font-weight:800;font-size:22px;line-height:26px;letter-spacing:-.02em}
+.sec .sub{font-size:13px;line-height:18px;color:var(--graphite)}
+.sec .body{flex:1;display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:25px;color:var(--body)}
+.sec .body a{color:var(--sky-shade);font-weight:600}
+.updated{font-size:13px;line-height:18px;color:var(--graphite);padding-top:8px}
+.side{width:300px;flex:none;display:flex;flex-direction:column;gap:36px;padding-top:64px;position:sticky;top:64px}
+.says{display:flex;align-items:flex-end;gap:12px;padding-left:8px}
+.says .bubble{padding:10px 14px;background:#fff;border:2px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);font-size:14px;font-weight:600;line-height:18px}
+.note{display:flex;flex-direction:column;gap:12px;width:300px;padding:24px 22px 26px;background:var(--sticky);box-shadow:2px 10px 22px rgba(27,16,53,.16);transform:rotate(3deg);font-family:var(--pixel);color:var(--deep)}
+.note b{font-size:20px;line-height:24px;font-weight:600}
+.note span{font-size:16px;line-height:23px}
+.side .sticker{align-self:flex-start;transform:rotate(-4deg)}
+@media (max-width:1180px){
+  .desk{flex-direction:column;align-items:center;gap:40px;padding-top:56px}
+  .side{position:static;width:100%;max-width:760px;padding-top:0;flex-direction:row;flex-wrap:wrap;align-items:center;gap:28px}
+  .side .says{order:0}
+}
+@media (max-width:700px){
+  .desk{padding:32px 16px 72px}
+  .doc{padding:36px 22px 40px;gap:28px}
+  .head h1{font-size:42px;line-height:42px}
+  .head .lede{font-size:17px;line-height:26px}
+  .sec{flex-direction:column;gap:12px;padding-top:22px}
+  .sec .label{width:auto}
+  .note{width:100%;transform:rotate(1.5deg)}
+}
+</style>
+</head>
+<body>
+<header class="menubar">
+  <nav class="menus" aria-label="Main">
+    <a class="app" href="./"><img class="px" src="assets/pet-idle.png" width="22" height="22" alt="">perch</a>
+    <a href="./#features" class="feat">features</a>
+    <a href="privacy.html" class="on" aria-current="page">privacy</a>
+    <a href="releases.html">releases</a>
+  </nav>
+  <div class="notch" aria-hidden="true">
+    <img class="px bob" src="assets/pet-speaking.png" width="32" height="32" alt="">
+    <div class="wave"><i style="--h:6px;--d:.1"></i><i style="--h:14px;--d:.5"></i><i style="--h:9px;--d:.3"></i><i style="--h:18px;--d:.8"></i><i style="--h:11px;--d:.2"></i><i style="--h:5px;--d:.6"></i></div>
+  </div>
+  <div class="status">
+    <span class="clock" id="clock"></span>
+    <a class="pill-btn" href="Perch.dmg" download>get perch</a>
+  </div>
+</header>
+
+<main class="desk">
+  <article class="window doc-win">
+    <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">privacy.txt</span><span class="sp"></span></div>
+    <div class="doc">
+      <div class="head">
+        <div class="eyebrow">privacy</div>
+        <h1>your stuff stays on your mac.</h1>
+        <p class="lede">perch is a free mac app and a chrome extension, perch for claude. both are built so your screen, chats and files never leave your computer.</p>
+      </div>
+
+      <section class="sec">
+        <div class="label"><h2>perch for claude</h2><div class="sub">the chrome extension</div></div>
+        <div class="body">
+          <p>runs only on claude.ai and chatgpt.com.</p>
+          <p>reads whether claude or chatgpt is replying, asking you something or done, plus the chat's title and the latest line, so the notch can show it.</p>
+          <p>sends that only to the perch app on the same mac. never to us, never to a server.</p>
+          <p>presses allow, deny or send only when you ask it to from perch.</p>
+          <p>no analytics, no ads, nothing stored or sold.</p>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="label"><h2>the perch app</h2><div class="sub">on your mac</div></div>
+        <div class="body">
+          <p>what your agents are doing stays on your mac (127.0.0.1).</p>
+          <p>the mic listens only while you hold the hotkey, and speech becomes text on your mac.</p>
+          <p>one screenshot, only when you hold the keys and ask about your screen. it goes to your own claude code and is never saved.</p>
+          <p>perch's memory is a file on your mac (~/.perch/memory.md). you can open, edit or clear it, or turn memory off. it, and your CLAUDE.md and AGENTS.md notes, only ever go to your own claude code.</p>
+          <p>perch does things on your mac only after you press allow, and shows exactly what it will run first. bigger tasks (like making a small website) show the plan first, run with your own claude code, work only inside ~/Perch or folders you add, can't run terminal commands, and never delete anything.</p>
+          <p>whatsapp to-dos are off until you turn them on. perch then reads the whatsapp mac app's chat list while it's open, and only unread chats that mention you or are sent to you go to your own claude code to check for an ask. to-dos keep a short quote in a file on your mac (~/.perch/todos.json). perch never sends a whatsapp message.</p>
+          <p>answers are spoken by your mac's own voice. if you choose sarvam or elevenlabs instead, the answer text is sent to them, with your own key, to turn it into speech. your key stays in your mac's keychain.</p>
+          <p>from the internet it only fetches the update check and a small list of claude's button labels from this site.</p>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="label"><h2>crash reports</h2><span class="tag">only if you say yes</span></div>
+        <div class="body">
+          <p>if you turn them on, perch sends the app version, macos version, mac model, which features are on, and a short trail of what perch was doing when something broke.</p>
+          <p>never your screen, chats, prompts, files or file names.</p>
+          <p>reports go to <a href="https://sentry.io" rel="noopener">sentry</a>, which we use to find and fix bugs. switch them off any time in perch → about &amp; updates.</p>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="label"><h2>user count</h2><span class="tag">only if you say yes</span></div>
+        <div class="body">
+          <p>if you choose "count me in", perch sends one tiny check-in a day: a random id made on your mac and the app version. it's how we know how many people use perch.</p>
+          <p>no name, no email, no screen, chats or files. switch it off any time in perch → about &amp; updates.</p>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="label"><h2>feedback</h2></div>
+        <div class="body">
+          <p>when you use send feedback, we get what you type, and your email if you add it, so we can write back.</p>
+          <p>questions? send feedback from inside perch and we'll reply.</p>
+        </div>
+      </section>
+
+      <p class="updated">last updated 15 october 2026</p>
+    </div>
+  </article>
+
+  <aside class="side" aria-label="The short version">
+    <div class="says"><img class="px bob" src="assets/pet-idle.png" width="64" height="64" alt=""><span class="bubble">i only peek when you ask.</span></div>
+    <div class="note">
+      <b>the short version</b>
+      <span>✓ no account, no server, no api key</span>
+      <span>✓ screen seen only while you hold the keys</span>
+      <span>✓ memory stays in a file on your mac</span>
+      <span>✓ nothing runs on your mac without your allow</span>
+      <span>✓ claude.ai and chatgpt tabs talk only to perch on your mac</span>
+      <span>✓ crash reports and user count only if you say yes</span>
+      <span>✓ nothing sold, ever</span>
+    </div>
+    <span class="sticker lime">stays on 127.0.0.1 ✓</span>
+  </aside>
+</main>
+
+<footer>
+  <span>perch is free and independent. not affiliated with anthropic or openai.</span>
+  <a href="privacy.html">privacy</a>
+  <a href="releases.html">releases</a>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
