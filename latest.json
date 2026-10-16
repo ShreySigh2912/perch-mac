@@ -1,0 +1,9 @@
+{
+  "version": "0.7.0",
+  "url": "Perch.dmg",
+  "notes": [
+    "Talk mode: tap your shortcut once for a back-and-forth conversation, tap again to end",
+    "Ask about any open tab: \"compare the two flights I have open\" (Safari, Chrome, Arc, Brave, Edge)",
+    "Teach Perch a skill once and run it by name; WhatsApp to-dos tick themselves off when you reply"
+  ]
+}

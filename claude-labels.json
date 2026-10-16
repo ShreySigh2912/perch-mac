@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "stop": [
+    "stop",
+    "stop response",
+    "stop generating",
+    "stop responding",
+    "stop claude"
+  ],
+  "allow": [
+    "allow once",
+    "allow for this chat",
+    "allow",
+    "approve",
+    "allow always",
+    "always allow"
+  ],
+  "deny": [
+    "deny",
+    "don't allow",
+    "do not allow",
+    "decline",
+    "reject"
+  ],
+  "streamingGroup": [
+    "currently streaming message"
+  ],
+  "respondedPrefix": [
+    "claude responded:"
+  ],
+  "respondingText": [
+    "claude is responding"
+  ],
+  "renameSuffixes": [
+    ", rename session",
+    ", rename chat",
+    ", rename conversation"
+  ],
+  "sidebarGroup": [
+    "sidebar"
+  ],
+  "sidebarRunning": [
+    "running"
+  ],
+  "toolStepPrefixes": [
+    "used ", "using ", "ran ", "running ", "read ", "reading ", "searched ", "searching ",
+    "edited ", "editing ", "created ", "creating ", "wrote ", "writing ", "fetched ",
+    "fetching ", "viewed ", "viewing ", "called ", "calling ", "loaded ", "loading "
+  ],
+  "askedPrefix": [
+    "you said:"
+  ],
+  "web": {
+    "stopSelectors": [
+      "button[aria-label='Stop response']",
+      "button[aria-label='Stop Response']",
+      "button[aria-label*='Stop' i][aria-label*='respon' i]",
+      "button[data-testid='stop-button']"
+    ],
+    "streamingSelectors": [
+      "[data-is-streaming='true']"
+    ],
+    "messageSelectors": [
+      "[data-is-streaming] .standard-markdown",
+      ".standard-markdown",
+      "[data-is-streaming]",
+      ".font-claude-response"
+    ],
+    "composerSelectors": [
+      "[data-testid='chat-input'][contenteditable='true']",
+      "div.ProseMirror[contenteditable='true']",
+      "[data-testid='chat-input'] [contenteditable='true']",
+      "fieldset [contenteditable='true']"
+    ],
+    "sendSelectors": [
+      "button[data-testid='chat-input-send']",
+      "button[aria-label='Send message']",
+      "button[aria-label*='Send' i]"
+    ],
+    "allowTexts": [
+      "allow once",
+      "allow for this chat",
+      "allow",
+      "always allow",
+      "allow always",
+      "approve"
+    ],
+    "denyTexts": [
+      "deny",
+      "decline",
+      "don't allow",
+      "do not allow",
+      "reject"
+    ],
+    "titleSuffixes": [
+      " - Claude",
+      " | Claude",
+      " — Claude"
+    ],
+    "chatPaths": [
+      "/chat/",
+      "/new",
+      "/project/"
+    ],
+    "needsInputTexts": [
+      "needs your input",
+      "asking a question"
+    ]
+  }
+}
