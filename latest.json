@@ -1,0 +1,7 @@
+{
+  "version": "0.7.1",
+  "url": "Perch.dmg",
+  "notes": [
+    "Fixes \"Perch can't read the Claude app\" in long chats: Perch now finds Claude's message box however long the conversation gets"
+  ]
+}

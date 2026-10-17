@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perch · a little bird that knows your screen</title>
+<meta name="description" content="Perch is a free pixel bird in your MacBook notch. Hold ⌃⌥ and ask anything on your screen. It also watches Claude Code and Codex and lets you approve requests from the notch. Now in beta on Windows.">
+<meta property="og:title" content="Perch · a little bird that knows your screen">
+<meta property="og:description" content="A free pixel bird in your MacBook notch. Ask it anything on your screen, and let it babysit Claude Code and Codex.">
+<meta property="og:image" content="https://agentperch.in/assets/og.png">
+<meta property="og:url" content="https://agentperch.in/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#BFE8FA">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/app-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --desk:#BFE8FA; --paper:#FFFFFF; --fog:#F2F2F3; --ink:#0B0B0C; --graphite:#5C5C63; --smoke:#8E8E96;
+  --deep:#1B1035; --night:#16112B; --night-2:#221A3D; --line:#2A2440;
+  --sky:#33C7FF; --sky-shade:#1A8FE3; --lemon:#FFD60A; --lime:#2CF08A; --hot:#FF3D5A;
+  --violet:#8C6BFF; --magenta:#FF4FD8; --tangerine:#FFA41B; --sticky:#FFE97A;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --sans:Inter,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace; --pixel:"Pixelify Sans",var(--sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--desk);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img.px{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.wrap{max-width:1440px;margin:0 auto;position:relative}
+
+/* ---------- menu bar ---------- */
+.menubar{position:sticky;top:0;z-index:50;height:40px;display:flex;justify-content:space-between;align-items:flex-start;padding:0 18px;background:rgba(255,255,255,.72);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid rgba(11,11,12,.06)}
+.menus,.status{display:flex;align-items:center;gap:22px;height:40px;flex:1;font-size:14px;font-weight:500}
+.status{justify-content:flex-end;gap:16px}
+.menus .app{display:flex;align-items:center;gap:7px;font-weight:700}
+.menus a:hover{color:var(--sky-shade)}
+.notch{flex:0 0 300px;height:40px;background:#000;border-radius:0 0 16px 16px;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 14px}
+.wave{display:flex;gap:3px;align-items:center;height:20px}
+.wave i{width:3px;border-radius:2px;background:var(--magenta);display:block;height:var(--h)}
+.pill-btn{white-space:nowrap;display:inline-flex;align-items:center;padding:5px 12px;background:var(--sky);border:1px solid var(--sky-shade);border-radius:999px;font-weight:600;font-size:13px;color:var(--deep)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:28px 80px 80px}
+.bubble{background:#fff;border:2px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 var(--ink);padding:12px 20px;font-weight:500;font-size:16px}
+.window{background:#fff;border:1px solid rgba(11,11,12,.18);border-radius:14px;box-shadow:0 30px 60px rgba(27,16,53,.18);overflow:hidden}
+.titlebar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--fog);border-bottom:1px solid rgba(11,11,12,.08);font-size:13px;color:var(--graphite)}
+.titlebar .t{flex:1;text-align:center}
+.titlebar .sp{width:52px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+.hero-win{width:880px;max-width:100%;margin-top:36px;position:relative;overflow:visible}
+.hero-win .titlebar{border-radius:14px 14px 0 0}
+.hero-body{display:flex;flex-direction:column;align-items:center;gap:22px;padding:64px 64px 56px;text-align:center}
+h1{font-family:var(--display);font-weight:800;font-size:76px;line-height:74px;letter-spacing:-.045em}
+.lede{font-size:19px;line-height:29px;color:var(--graphite);max-width:620px}
+.ctas{display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:8px}
+.ctas .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:999px;font-weight:600;font-size:16px;transition:transform .15s ease,box-shadow .15s ease}
+.btn.primary{background:var(--sky);border:1.5px solid var(--sky-shade);color:var(--deep);box-shadow:inset 0 2px 0 rgba(255,255,255,.6),0 3px 0 var(--sky-shade)}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.6),0 5px 0 var(--sky-shade)}
+.btn.ghost{background:#fff;border:1.5px solid rgba(11,11,12,.2);font-weight:500}
+.btn.ghost:hover{border-color:var(--ink)}
+.fine{font-size:13px;color:var(--smoke)}
+.btn .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--lemon);color:var(--ink);letter-spacing:.02em}
+.win-note{margin-top:14px;padding:12px 14px;border:1px dashed rgba(11,11,12,.25);border-radius:12px;font-size:13px;line-height:19px;color:var(--graphite)}
+.win-note b{color:var(--ink)}
+.works{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.works span{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--fog);color:var(--graphite)}
+.works span.soon{background:transparent;border:1px dashed rgba(11,11,12,.25);color:var(--smoke)}
+
+.perched{position:absolute;top:-62px;right:64px}
+.sticky-note{position:absolute;left:120px;top:250px;width:180px;padding:16px;background:var(--sticky);box-shadow:2px 6px 14px rgba(27,16,53,.15);transform:rotate(-6deg);font-family:var(--pixel);font-size:15px;line-height:20px;color:var(--deep)}
+.sticky-note .ok{color:var(--hot);margin-top:6px}
+.desk-icon{position:absolute;right:110px;top:220px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.desk-icon b{padding:2px 8px;background:var(--sky-shade);border-radius:4px;font-size:12px;font-weight:400;color:#fff}
+
+.sticker{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-weight:600;font-size:15px;white-space:nowrap;transition:transform .2s ease}
+.sticker:hover{transform:rotate(0deg) scale(1.04)!important}
+.sq{width:10px;height:10px;flex:none;background:var(--magenta)}
+.floaters .sticker{position:absolute}
+.s1{left:70px;top:470px;background:#fff;transform:rotate(4deg)}
+.s2{left:130px;top:580px;background:var(--lemon);color:var(--deep);font-weight:700;transform:rotate(-5deg)}
+.s3{right:96px;top:400px;background:#fff;transform:rotate(-4deg)}
+.s4{right:110px;top:500px;background:var(--lime);color:var(--deep);font-weight:700;transform:rotate(6deg)}
+.s5{right:76px;top:600px;background:var(--violet);color:#fff;font-weight:700;transform:rotate(-3deg)}
+
+/* ---------- feature windows ---------- */
+.features{position:relative;display:flex;justify-content:center;align-items:flex-start;gap:40px;padding:88px 80px 80px;scroll-margin-top:60px}
+.feat-cap{padding:22px 28px 26px;background:#fff}
+.feat-cap h3{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.03em}
+.feat-cap p{font-size:16px;line-height:24px;color:var(--graphite);margin-top:6px}
+.ask-win{width:620px;transform:rotate(-1.5deg);flex:none}
+.ask-stage{background:#E8F6FD;padding:32px;display:flex;flex-direction:column;align-items:center}
+.voice{width:100%;max-width:480px;background:#000;border-radius:0 0 28px 28px;padding:22px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:2}
+.voice-head{display:flex;align-items:center;gap:12px}
+.voice-head strong{font-family:var(--display);font-weight:800;font-size:18px;color:#fff;display:block}
+.voice-head em{font-style:normal;font-size:14px;color:#B9B9C2}
+.answer{background:var(--night);border-left:3px solid var(--magenta);padding:14px 16px;color:#fff;font-size:15px;line-height:22px}
+.app-mock{width:100%;max-width:540px;margin-top:-16px;display:flex;background:#fff;border:1.5px solid var(--ink);border-radius:12px;box-shadow:8px 8px 0 var(--sky);overflow:hidden;position:relative;min-height:230px}
+.app-side{width:150px;flex:none;padding:36px 18px 18px;background:var(--fog);display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--graphite)}
+.app-side b{color:var(--ink);font-weight:600}
+.app-main{flex:1;padding:36px 22px 18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.app-main h4{font-weight:600;font-size:17px}
+.keyrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 10px 10px 14px;background:var(--fog);font-family:var(--mono);font-size:12px;color:var(--graphite);position:relative}
+.keyrow.dim{color:var(--smoke)}
+.copy{padding:5px 12px;background:#fff;border:2px solid var(--magenta);font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink);flex:none}
+.pointer{position:absolute;right:8px;bottom:-22px;animation:point 2.4s ease-in-out infinite}
+
+.agents-win{width:560px;flex:none;transform:rotate(1.5deg);background:var(--night);border-color:rgba(11,11,12,.4);box-shadow:0 24px 48px rgba(27,16,53,.22)}
+.agents-win .titlebar{background:var(--night-2);color:#B9B9C2;border-bottom:none}
+.term{padding:22px 24px;font-family:var(--mono);font-size:13px;line-height:22px;color:#E8E6F2;white-space:pre-wrap}
+.term .muted{color:#8E8E96}
+.approve{margin:0 24px 24px;display:flex;align-items:center;gap:12px;padding:14px;background:#0B0B0C;border:2px solid var(--lemon)}
+.approve span{flex:1;color:#fff;font-size:14px;min-width:0}
+.chip{padding:6px 14px;font-family:var(--display);font-weight:800;font-size:14px;flex:none;cursor:pointer;border:none}
+.chip.allow{background:var(--lime);color:var(--deep)}
+.chip.deny{background:var(--line);color:#fff}
+
+.feat{position:relative;display:flex;flex-direction:column}
+.feat-agents{margin-top:60px}
+.peek{position:absolute;display:flex;align-items:flex-end;gap:6px;z-index:3}
+.peek .say{padding:8px 14px;background:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font-size:14px;font-weight:600}
+.peek.left{left:-24px;top:-58px}
+.peek.left .say{border-radius:16px 16px 16px 4px;transform:rotate(2deg)}
+.peek.right{right:-28px;top:-62px}
+.peek.right .say{border-radius:16px 16px 4px 16px;transform:rotate(-3deg)}
+
+/* ---------- sticker wall ---------- */
+.wall{display:flex;flex-direction:column;align-items:center;gap:20px;padding:120px 80px 40px;scroll-margin-top:40px}
+.sec-title{display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;font-size:56px;line-height:56px;letter-spacing:-.04em;text-align:center}
+.sec-sub{font-size:18px;color:var(--graphite);text-align:center}
+.board{margin-top:20px;width:1180px;max-width:100%;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:22px 18px;padding:44px 40px;background:#fff;border:2px solid var(--ink);border-radius:22px;box-shadow:8px 8px 0 var(--deep)}
+.board .sticker{padding:8px 18px 8px 8px;gap:10px;box-shadow:none;font-size:16px}
+.board .sticker:nth-child(3n+1){transform:rotate(-2.5deg)}
+.board .sticker:nth-child(3n+2){transform:rotate(2deg)}
+.board .sticker:nth-child(3n){transform:rotate(-1deg)}
+.c-screen{background:#FFE1F7}.c-need{background:#FFF4B8}.c-work{background:#EAE3FF}.c-done{background:#D7FBE8}.c-fail{background:#FFDDE3}
+.legend{text-align:center;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 28px;padding-top:8px;font-size:14px;color:var(--graphite)}
+.legend .k{display:flex;align-items:center;gap:8px}
+.legend .k i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+.legend .note{color:var(--smoke)}
+
+/* ---------- widgets ---------- */
+.widgets{display:flex;justify-content:center;align-items:flex-start;gap:28px;padding:100px 80px 20px;scroll-margin-top:40px}
+.moods{width:400px;flex:none;padding:26px;background:rgba(255,255,255,.85);border:1px solid #fff;border-radius:28px;box-shadow:0 18px 40px rgba(27,16,53,.14);transform:rotate(-1deg)}
+.moods .hd{display:flex;justify-content:space-between;align-items:baseline}
+.moods h3,.install h3{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.03em}
+.moods .hd small{font-size:13px;color:var(--smoke)}
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:18px}
+.mood{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600}
+.mood img{transition:transform .2s ease}
+.mood:hover img{transform:translateY(-4px)}
+.install{width:420px;flex:none;margin-top:24px}
+.steps{display:flex;flex-direction:column;gap:18px;padding:24px 26px 28px}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{width:28px;height:28px;flex:none;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--deep);background:var(--lime)}
+.step .n.y{background:var(--lemon)}
+.step b{display:block;font-weight:600;font-size:16px}
+.step p{font-size:14px;line-height:20px;color:var(--graphite);margin-top:2px}
+.privacy{width:300px;flex:none;margin-top:8px;padding:24px 22px 26px;background:var(--sticky);box-shadow:2px 10px 22px rgba(27,16,53,.16);transform:rotate(3deg);font-family:var(--pixel);color:var(--deep);display:flex;flex-direction:column;gap:12px;scroll-margin-top:60px}
+.privacy h3{font-weight:600;font-size:20px}
+.privacy p{font-size:16px;line-height:23px}
+
+/* ---------- dock ---------- */
+.dock-area{display:flex;flex-direction:column;align-items:center;gap:20px;padding:96px 80px 40px;text-align:center}
+.dock-area h2{font-family:var(--display);font-weight:800;font-size:56px;line-height:56px;letter-spacing:-.04em}
+.dock-area > p{font-size:17px;color:var(--graphite)}
+.dock{margin-top:16px;display:flex;align-items:flex-end;gap:14px;padding:12px 18px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9);border-radius:22px;box-shadow:0 10px 30px rgba(27,16,53,.12)}
+.tile{width:56px;height:56px;border-radius:14px;flex:none}
+.tile.w{background:#fff;border:1px solid rgba(11,11,12,.1)}.tile.d{background:var(--night)}.tile.o{background:var(--tangerine)}
+.perch-tile{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none}
+.perch-tile .ic{width:80px;height:80px;border-radius:20px;background:var(--deep);box-shadow:0 6px 0 var(--sky);display:flex;align-items:center;justify-content:center;transition:transform .2s ease}
+.dock:hover .perch-tile .ic{transform:translateY(-8px)}
+.perch-tile i{width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.dock .btn{align-self:center;padding:16px 26px;font-size:17px}
+footer{text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;padding:24px 16px 48px;font-size:13px;color:var(--graphite)}
+footer a:hover{color:var(--ink)}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .wave i{animation:wave 1.1s ease-in-out infinite;animation-delay:calc(var(--d) * -1s)}
+  .bob{animation:bob 2.6s ease-in-out infinite}
+  .hop{animation:hop 1.4s ease-in-out infinite}
+}
+@keyframes wave{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes hop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}}
+@keyframes point{0%,100%{transform:translate(0,0)}50%{transform:translate(-4px,-4px)}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1280px){
+  .floaters,.sticky-note,.desk-icon{display:none}
+  .mobile-stickers{display:flex!important}
+  .features{flex-direction:column;align-items:center;gap:56px}
+  .feat-agents{margin-top:24px}
+  .widgets{flex-wrap:wrap}
+}
+.mobile-stickers{display:none;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px;max-width:880px}
+@media (max-width:520px){
+  .menus a:not(.app){display:none}
+  .notch{flex-basis:120px!important}
+}
+@media (max-width:860px){
+  .menus a.hide-s,.status .clock,.status svg{display:none}
+  .notch{flex-basis:150px;padding:0 12px 0 10px}
+  .menubar{padding:0 12px}
+  .hero{padding:20px 16px 56px}
+  .hero-win{margin-top:56px}
+  .approve{flex-wrap:wrap}
+  .approve span{flex:1 1 calc(100% - 56px)}
+  .board .sticker{transform:none!important}
+  .bubble{font-size:14px;padding:10px 14px;text-align:center}
+  .hero-body{padding:40px 20px 36px}
+  h1{font-size:44px;line-height:44px}
+  .lede{font-size:17px;line-height:26px}
+  .perched{right:20px;top:-50px}.perched img{width:56px;height:56px}
+  .features{padding:72px 16px 56px}
+  .feat{width:100%}
+  .ask-win,.agents-win{width:100%;transform:none}
+  .ask-stage{padding:20px 14px}
+  .app-side{display:none}
+  .peek{position:static;margin-bottom:-4px;align-self:flex-start}
+  .peek.right{align-self:flex-end}
+  .peek .say{font-size:13px}
+  .wall{padding:80px 16px 24px}
+  .sec-title{font-size:36px;line-height:38px;flex-direction:column;gap:6px}
+  .board{padding:24px 14px;gap:12px 8px}
+  .board .sticker{font-size:14px;white-space:normal}
+  .widgets{padding:72px 16px 8px;gap:32px}
+  .moods,.install,.privacy{width:100%;max-width:420px;transform:none;margin-top:0}
+  .dock-area{padding:72px 16px 32px}
+  .dock-area h2{font-size:38px;line-height:40px}
+  .dock{flex-wrap:wrap;justify-content:center}
+  .tile{display:none}
+  .sticker{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<header class="menubar">
+  <nav class="menus" aria-label="Main">
+    <a class="app" href="#top"><img class="px" src="assets/pet-idle.png" width="22" height="22" alt="">perch</a>
+    <a href="#features">features</a>
+    <a href="#privacy" class="hide-s">privacy</a>
+    <a href="#setup" class="hide-s">setup</a>
+    <a href="releases.html" class="hide-s">releases</a>
+  </nav>
+  <div class="notch" aria-hidden="true">
+    <img class="px bob" src="assets/pet-speaking.png" width="32" height="32" alt="">
+    <div class="wave"><i style="--h:6px;--d:.1"></i><i style="--h:14px;--d:.5"></i><i style="--h:9px;--d:.3"></i><i style="--h:18px;--d:.8"></i><i style="--h:11px;--d:.2"></i><i style="--h:5px;--d:.6"></i></div>
+  </div>
+  <div class="status">
+    <svg width="17" height="13" viewBox="0 0 17 13" aria-hidden="true"><path d="M8.5 12.2 L11 9.4 A3.6 3.6 0 0 0 6 9.4 Z" fill="#0B0B0C"/><path d="M3.6 7 A7 7 0 0 1 13.4 7" stroke="#0B0B0C" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M1 4.2 A10.6 10.6 0 0 1 16 4.2" stroke="#0B0B0C" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    <svg width="26" height="13" viewBox="0 0 26 13" aria-hidden="true"><rect x=".75" y=".75" width="21.5" height="11.5" rx="3.2" stroke="#0B0B0C" stroke-opacity=".45" stroke-width="1.5" fill="none"/><rect x="2.5" y="2.5" width="14" height="8" rx="1.6" fill="#0B0B0C"/><rect x="23.4" y="4.3" width="1.8" height="4.4" rx=".9" fill="#0B0B0C" fill-opacity=".45"/></svg>
+    <span class="clock" id="clock">Thu 15 Oct&nbsp; 2:10 PM</span>
+    <a class="pill-btn" href="Perch.dmg" download data-dl="main">get perch</a>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- hero -->
+  <section class="hero">
+    <div class="bubble">hi! hold ⌃⌥ and ask me anything on your screen</div>
+
+    <div class="window hero-win">
+      <div class="perched"><img class="px bob" src="assets/pet-idle.png" width="72" height="72" alt="Perch, a small pixel bird"></div>
+      <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">perch.app</span><span class="sp"></span></div>
+      <div class="hero-body">
+        <h1>a little bird that knows your screen.</h1>
+        <p class="lede">perch lives in your macbook notch. ask it anything out loud and it talks back and points the way. it also babysits claude code and codex, so you stop checking the terminal.</p>
+        <div class="ctas">
+          <div class="row">
+            <a class="btn primary" href="Perch.dmg" download data-dl="main">download for mac</a>
+            <a class="btn ghost" href="Perch-Setup.exe" download data-dl="other">windows <span class="tag">beta</span></a>
+            <a class="btn ghost" href="#features">watch it work</a>
+          </div>
+          <p class="fine" data-dl="fine">100% free. runs on your own claude code. macos 14.2+ · windows 10/11 (beta)</p>
+          <div class="works" aria-label="Works with"><span>claude code</span><span>codex</span><span>claude app</span><span class="soon">chatgpt · soon</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-note">todo: stop alt-tabbing to see if claude is done<div class="ok">✓ done</div></div>
+    <a class="desk-icon" href="Perch.dmg" download data-dl="main"><img class="px" src="assets/pet-idle.png" width="72" height="72" alt=""><b data-dl="file">Perch.dmg</b></a>
+
+    <div class="floaters" aria-hidden="true">
+      <span class="sticker s1"><i class="sq"></i>"what does this error mean?"</span>
+      <span class="sticker s2">allow npm install? yes.</span>
+      <span class="sticker s3"><i class="sq"></i>"where's export?"</span>
+      <span class="sticker s4">claude's done ✓</span>
+      <span class="sticker s5">3 agents working</span>
+    </div>
+    <div class="mobile-stickers" aria-hidden="true">
+      <span class="sticker" style="background:#fff;transform:rotate(3deg)"><i class="sq"></i>"what does this error mean?"</span>
+      <span class="sticker" style="background:var(--lemon);transform:rotate(-3deg)">allow npm install? yes.</span>
+      <span class="sticker" style="background:var(--lime);transform:rotate(2deg)">claude's done ✓</span>
+      <span class="sticker" style="background:var(--violet);color:#fff;transform:rotate(-2deg)">3 agents working</span>
+    </div>
+  </section>
+
+  <!-- feature windows -->
+  <section class="features" id="features">
+    <div class="feat feat-ask">
+    <div class="peek left"><img class="px bob" src="assets/pet-thinking.png" width="64" height="64" alt=""><div class="say">hmm, let me look...</div></div>
+    <article class="window ask-win">
+      <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">ask-your-screen.mov</span><span class="sp"></span></div>
+      <div class="ask-stage">
+        <div class="voice">
+          <div class="voice-head"><img class="px" src="assets/pet-speaking.png" width="44" height="44" alt=""><div><strong>Perch</strong><em>"where do I find the anon key?"</em></div></div>
+          <div class="answer">You're already on API Keys. It's the first row. Hit Copy on the right.</div>
+        </div>
+        <div class="app-mock">
+          <div class="app-side"><span>Project</span><span>Database</span><span>Auth</span><b>API Keys</b></div>
+          <div class="app-main">
+            <h4>API Keys</h4>
+            <div class="keyrow"><span>anon public · eyJhbGci••••••</span><span class="copy">Copy</span>
+              <svg class="pointer" width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2 L2 21 L7 16 L11 24 L14 22.5 L10 15 L17 15 Z" fill="#FF4FD8" stroke="#0B0B0C" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="keyrow dim"><span>service_role · ••••••••••••</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-cap"><h3>stuck? just ask.</h3><p>hold ⌃⌥ and say what you need. perch sees the screen, answers out loud, and draws a pointer at the button.</p></div>
+    </article>
+    </div>
+
+    <div class="feat feat-agents">
+    <div class="peek right"><div class="say">psst. claude needs you</div><img class="px hop" src="assets/pet-needsYou.png" width="64" height="64" alt=""></div>
+
+    <article class="window agents-win">
+      <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">claude · program-ops</span><span class="sp"></span></div>
+      <div class="term">&gt; run the staging migration
+
+<span class="muted">●</span> Reading prisma/schema.prisma
+<span class="muted">●</span> Bash(npm run migrate -- --env=staging)
+  <span class="muted">⎿ waiting for permission…</span></div>
+      <div class="approve" id="approve">
+        <img class="px" src="assets/pet-needsYou.png" width="40" height="40" alt="" id="approve-pet">
+        <span id="approve-text">perch: claude wants to run Bash</span>
+        <button class="chip allow" type="button" data-act="allow">Allow</button>
+        <button class="chip deny" type="button" data-act="deny">Deny</button>
+      </div>
+      <div class="feat-cap"><h3>claude needs a yes? it hops.</h3><p>perch watches every claude code and codex session. allow or deny from the notch without leaving your app.</p></div>
+    </article>
+    </div>
+  </section>
+
+  <!-- sticker wall -->
+  <section class="wall" id="ask">
+    <h2 class="sec-title"><img class="px" src="assets/pet-thinking.png" width="64" height="64" alt="">things you can ask perch</h2>
+    <p class="sec-sub">hold ⌃⌥, say it out loud. it works in any app on your mac.</p>
+    <div class="board">
+      <span class="sticker c-screen"><img class="px" src="assets/pet-listening.png" width="36" height="36" alt="">"where's the export button?"</span>
+      <span class="sticker c-screen"><img class="px" src="assets/pet-speaking.png" width="36" height="36" alt="">"explain this error like I'm 5"</span>
+      <span class="sticker c-screen"><img class="px" src="assets/pet-thinking.png" width="36" height="36" alt="">"how do I add a keyframe in DaVinci?"</span>
+      <span class="sticker c-screen"><img class="px" src="assets/pet-listening.png" width="36" height="36" alt="">"summarise this email thread"</span>
+      <span class="sticker c-screen"><img class="px" src="assets/pet-speaking.png" width="36" height="36" alt="">"which formula do I need here?"</span>
+      <span class="sticker c-screen"><img class="px" src="assets/pet-thinking.png" width="36" height="36" alt="">"what's wrong with this chart?"</span>
+      <span class="sticker c-need"><img class="px" src="assets/pet-needsYou.png" width="36" height="36" alt="">"yes, run it"</span>
+      <span class="sticker c-work"><img class="px" src="assets/pet-working.png" width="36" height="36" alt="">"what's running?"</span>
+      <span class="sticker c-done"><img class="px" src="assets/pet-done.png" width="36" height="36" alt="">"is claude done yet?"</span>
+      <span class="sticker c-fail"><img class="px" src="assets/pet-failed.png" width="36" height="36" alt="">"why did the build fail?"</span>
+      <span class="sticker c-need"><img class="px" src="assets/pet-needsYou.png" width="36" height="36" alt="">"deny that one"</span>
+      <span class="sticker c-work"><img class="px" src="assets/pet-working.png" width="36" height="36" alt="">"what is codex stuck on?"</span>
+    </div>
+    <div class="legend">
+      <span class="k"><i style="background:#FFE1F7"></i>about your screen</span>
+      <span class="k"><i style="background:#FFF4B8"></i>about your agents, coloured by mood</span>
+      <span class="note">"what's running", "yes" and "deny" are answered instantly, no model call.</span>
+    </div>
+  </section>
+
+  <!-- widgets -->
+  <section class="widgets" id="setup">
+    <div class="moods">
+      <div class="hd"><h3>its face is the status</h3><small>8 moods</small></div>
+      <div class="mood-grid">
+        <div class="mood" style="color:#C2577A"><img class="px" src="assets/pet-idle.png" width="56" height="56" alt="">idle</div>
+        <div class="mood" style="color:#5B3FD9"><img class="px" src="assets/pet-working.png" width="56" height="56" alt="">working</div>
+        <div class="mood" style="color:#8A6D00"><img class="px" src="assets/pet-needsYou.png" width="56" height="56" alt="">needs you</div>
+        <div class="mood" style="color:#0F8A52"><img class="px" src="assets/pet-done.png" width="56" height="56" alt="">done</div>
+        <div class="mood" style="color:#D11F3C"><img class="px" src="assets/pet-failed.png" width="56" height="56" alt="">failed</div>
+        <div class="mood" style="color:#B8299A"><img class="px" src="assets/pet-listening.png" width="56" height="56" alt="">listening</div>
+        <div class="mood" style="color:#5B3FD9"><img class="px" src="assets/pet-thinking.png" width="56" height="56" alt="">thinking</div>
+        <div class="mood" style="color:#B8299A"><img class="px" src="assets/pet-speaking.png" width="56" height="56" alt="">speaking</div>
+      </div>
+    </div>
+
+    <div class="window install">
+      <div class="titlebar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i><span class="t">install perch</span><span class="sp"></span></div>
+      <div class="steps">
+        <h3>set up in a minute</h3>
+        <div class="step"><span class="n">1</span><div><b>drag perch into applications</b><p>first launch: open system settings → privacy &amp; security → open anyway. once.</p></div></div>
+        <div class="step"><span class="n">2</span><div><b>connect claude code, codex or claude.ai</b><p>one click. your settings are backed up first.</p></div></div>
+        <div class="step"><span class="n y">3</span><div><b>hold ⌃⌥ and say hi</b><p>turn on mic and screen help only if you want it.</p></div></div>
+        <p class="win-note" id="windows"><b>on windows (beta):</b> run <a href="Perch-Setup.exe" download><u>Perch-Setup.exe</u></a>. windows says "protected your pc" the first time: click more info → run anyway. the bird lives in a pill at the top of your screen and in the taskbar tray. watching claude code and codex works today; voice is coming next.</p>
+      </div>
+    </div>
+
+    <div class="privacy" id="privacy">
+      <h3>privacy, plainly</h3>
+      <p>✓ screen seen only while you hold the keys</p>
+      <p>✓ speech turned to text on your mac</p>
+      <p>✓ no account, no server, no api key</p>
+      <p>✓ if perch quits, your agents don't notice</p>
+      <p>✓ crash reports only if you say yes, never your chats</p>
+    </div>
+  </section>
+
+  <!-- dock CTA -->
+  <section class="dock-area" id="download">
+    <h2>put a bird in your notch.</h2>
+    <p>free forever. it only sees your screen while you hold the keys.</p>
+    <div class="dock">
+      <span class="tile w"></span><span class="tile d"></span><span class="tile o"></span>
+      <span class="perch-tile"><span class="ic"><img class="px" src="assets/pet-done.png" width="64" height="64" alt=""></span><i></i></span>
+      <a class="btn primary" href="Perch.dmg" download data-dl="main">download perch for mac</a>
+      <a class="btn ghost" href="Perch-Setup.exe" download data-dl="other">windows <span class="tag">beta</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>perch is free and independent. not affiliated with anthropic or openai.</span>
+  <a href="privacy.html">privacy</a>
+  <a href="releases.html">releases</a>
+</footer>
+
+<script>
+// live clock in the fake menu bar
+(function(){
+  var el=document.getElementById('clock'); if(!el) return;
+  function tick(){
+    var d=new Date();
+    var day=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).replace(',','');
+    var t=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    el.textContent=day+'  '+t;
+  }
+  tick(); setInterval(tick,30000);
+})();
+// windows visitors get the windows download first (the mac one stays one click away)
+(function(){
+  // every Windows browser (Chrome, Edge, Firefox) says "Windows NT" in its user agent
+  if(!/Windows NT/i.test(navigator.userAgent||'')) return;
+  document.querySelectorAll('[data-dl="main"]').forEach(function(a){
+    a.setAttribute('href','Perch-Setup.exe');
+    if(a.classList.contains('btn')) a.innerHTML=a.textContent.indexOf('perch')>=0?'download perch for windows <span class="tag">beta</span>':'download for windows <span class="tag">beta</span>';
+  });
+  document.querySelectorAll('[data-dl="other"]').forEach(function(a){
+    a.setAttribute('href','Perch.dmg');
+    a.textContent='mac';
+  });
+  document.querySelectorAll('[data-dl="file"]').forEach(function(b){ b.textContent='Perch-Setup.exe'; });
+  document.querySelectorAll('[data-dl="fine"]').forEach(function(p){
+    p.innerHTML='100% free. windows 10/11, beta. first run: more info → run anyway. <a href="#windows"><u>details</u></a>';
+  });
+})();
+// the approval card actually answers
+(function(){
+  var box=document.getElementById('approve'); if(!box) return;
+  var pet=document.getElementById('approve-pet'), txt=document.getElementById('approve-text');
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var ok=b.dataset.act==='allow';
+    pet.src=ok?'assets/pet-done.png':'assets/pet-idle.png';
+    txt.textContent=ok?'allowed. claude is back to work.':'denied. claude will ask another way.';
+    box.style.borderColor=ok?'var(--lime)':'var(--line)';
+    box.querySelectorAll('button').forEach(function(x){x.style.display='none'});
+    setTimeout(function(){
+      pet.src='assets/pet-needsYou.png'; txt.textContent='perch: claude wants to run Bash';
+      box.style.borderColor=''; box.querySelectorAll('button').forEach(function(x){x.style.display=''});
+    },3200);
+  });
+})();
+</script>
+</body>
+</html>
