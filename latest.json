@@ -1,0 +1,11 @@
+{
+  "version": "0.7.1",
+  "url": "Perch.dmg",
+  "notes": [
+    "Fixes \"Perch can't read the Claude app\" in long chats: Perch now finds Claude's message box however long the conversation gets",
+    "No more crash when you switch microphones (AirPods, a display mic) and then hold the keys to talk",
+    "If Sarvam or ElevenLabs rejects your key, Perch switches to the Mac voice and says so in Settings \u2192 Voice",
+    "Optional anonymous usage counts (off until you say yes) so we can see which features help most",
+    "When Claude asks you a question (the choices card), the bird turns yellow and shows the question"
+  ]
+}

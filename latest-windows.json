@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "url": "Perch-Setup.exe",
+  "notes": [
+    "Perch is on Windows (beta): a pill at the top of your screen shows Claude Code and Codex.",
+    "Allow or deny what agents want to run, right from the pill.",
+    "Tray icon, settings, and a one-minute setup. Voice is next."
+  ]
+}
